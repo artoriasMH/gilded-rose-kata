@@ -2,56 +2,86 @@ package com.gildedrose
 
 class GildedRose(var items: List<Item>) {
 
+    private val AGED_BRIE = "Aged Brie"
+    private val BACKSTAGE_PASSES = "Backstage passes to a TAFKAL80ETC concert"
+    private val SULFURAS = "Sulfuras, Hand of Ragnaros"
+    private val MINIMUM_QUALITY = 0
+    private val MAXIMUM_QUALITY = 50
+
+    private val EXPIRED_SELL_IN = 0
+    private val BACKSTAGE_PASSES_FLAG_AT_10_SELL_IN = 10
+    private val BACKSTAGE_PASSES_FLAG_AT_5_SELL_IN = 5
+
     fun updateQuality() {
+
         for (item in items) {
-            if (item.name != "Aged Brie" && item.name != "Backstage passes to a TAFKAL80ETC concert") {
-                if (item.quality > 0) {
-                    if (item.name != "Sulfuras, Hand of Ragnaros") {
-                        item.quality = item.quality - 1
-                    }
-                }
-            } else {
-                if (item.quality < 50) {
-                    item.quality = item.quality + 1
 
-                    if (item.name == "Backstage passes to a TAFKAL80ETC concert") {
-                        if (item.sellIn < 11) {
-                            if (item.quality < 50) {
-                                item.quality = item.quality + 1
-                            }
-                        }
-
-                        if (item.sellIn < 6) {
-                            if (item.quality < 50) {
-                                item.quality = item.quality + 1
-                            }
-                        }
+            if (isNotAgedBrie(item) && isNotBackstagePasses(item)) {
+                if (item.quality > MINIMUM_QUALITY) {
+                    if (isNotSulfuras(item)) {
+                        item.quality = decreaseItemQuality(item)
                     }
                 }
             }
 
-            if (item.name != "Sulfuras, Hand of Ragnaros") {
-                item.sellIn = item.sellIn - 1
-            }
+            else {
+                if (item.quality < MAXIMUM_QUALITY) {
+                    item.quality = increaseItemQuality(item)
 
-            if (item.sellIn < 0) {
-                if (item.name != "Aged Brie") {
-                    if (item.name != "Backstage passes to a TAFKAL80ETC concert") {
-                        if (item.quality > 0) {
-                            if (item.name != "Sulfuras, Hand of Ragnaros") {
-                                item.quality = item.quality - 1
+                    if (item.name == BACKSTAGE_PASSES) {
+                        if (item.sellIn <= BACKSTAGE_PASSES_FLAG_AT_10_SELL_IN) {
+                            if (item.quality < MAXIMUM_QUALITY) {
+                                item.quality = increaseItemQuality(item)
                             }
                         }
-                    } else {
-                        item.quality = item.quality - item.quality
-                    }
-                } else {
-                    if (item.quality < 50) {
-                        item.quality = item.quality + 1
+
+                        if (item.sellIn <= BACKSTAGE_PASSES_FLAG_AT_5_SELL_IN) {
+                            if (item.quality < MAXIMUM_QUALITY) {
+                                item.quality = increaseItemQuality(item)
+                            }
+                        }
                     }
                 }
             }
+
+
+            if (isNotSulfuras(item)) {
+                item.sellIn = decreaseSellIn(item)
+            }
+
+
+            if (item.sellIn < EXPIRED_SELL_IN) {
+                if (isNotAgedBrie(item)) {
+                    if (isNotBackstagePasses(item)) {
+
+                        if (item.quality > MINIMUM_QUALITY) {
+                            if (isNotSulfuras(item)) {
+                                item.quality = decreaseItemQuality(item)
+                            }
+                        }
+                    }
+                    else {
+                        item.quality = resetItemQuality()
+                    }
+                }
+                else {
+                    if (item.quality < MAXIMUM_QUALITY) {
+                        item.quality = increaseItemQuality(item)
+                    }
+                }
+            }
+
         }
     }
+
+    private fun decreaseSellIn(item: Item) = item.sellIn - 1
+
+    private fun resetItemQuality() = 0
+    private fun decreaseItemQuality(item: Item) = item.quality - 1
+    private fun increaseItemQuality(item: Item) = item.quality + 1
+
+    private fun isNotSulfuras(item: Item) = item.name != SULFURAS
+    private fun isNotBackstagePasses(item: Item) = item.name != BACKSTAGE_PASSES
+    private fun isNotAgedBrie(item: Item) = item.name != AGED_BRIE
 
 }
