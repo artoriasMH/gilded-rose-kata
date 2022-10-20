@@ -16,62 +16,21 @@ class GildedRose(var items: List<Item>) {
 
         for (item in items) {
 
-            when(item.name){
+            when (item.name) {
                 SULFURAS -> break
                 AGED_BRIE -> {
                     decreaseSellIn(item)
+                    updateAgedBrieItemQuality(item)
                 }
+
                 BACKSTAGE_PASSES -> {
                     decreaseSellIn(item)
+                    updateBackstagePassesItemQuality(item)
                 }
+
                 else -> {
                     decreaseSellIn(item)
-                    updateItemQuality(item)
-                }
-            }
-
-            if (isNotAgedBrie(item) && isNotBackstagePasses(item)) {
-
-            }
-
-            else {
-                if (item.quality < MAXIMUM_QUALITY) {
-                    increaseItemQuality(item)
-
-                    if (item.name == BACKSTAGE_PASSES) {
-                        if (item.sellIn < BACKSTAGE_PASSES_FLAG_AT_10_SELL_IN) {
-                            if (item.quality < MAXIMUM_QUALITY) {
-                                increaseItemQuality(item)
-                            }
-                        }
-
-                        if (item.sellIn < BACKSTAGE_PASSES_FLAG_AT_5_SELL_IN) {
-                            if (item.quality < MAXIMUM_QUALITY) {
-                                increaseItemQuality(item)
-                            }
-                        }
-                    }
-                }
-            }
-
-
-
-
-
-            if (item.sellIn < EXPIRED_SELL_IN) {
-                if (isNotAgedBrie(item)) {
-                    if (isNotBackstagePasses(item)) {
-
-
-
-                    }  else {
-                        resetItemQuality(item)
-                    }
-                }
-                else {
-                    if (item.quality < MAXIMUM_QUALITY) {
-                        increaseItemQuality(item)
-                    }
+                    updateDefaultItemQuality(item)
                 }
             }
 
@@ -81,24 +40,44 @@ class GildedRose(var items: List<Item>) {
     private fun decreaseSellIn(item: Item) {
         item.sellIn--
     }
+
     private fun resetItemQuality(item: Item) {
         item.quality = 0
     }
+
     private fun decreaseItemQuality(item: Item) {
         item.quality--
     }
+
     private fun increaseItemQuality(item: Item) {
         item.quality++
     }
 
-    private fun updateItemQuality(item: Item){
+    private fun updateDefaultItemQuality(item: Item) {
         decreaseItemQuality(item)
-        if(item.sellIn < EXPIRED_SELL_IN && item.quality > MINIMUM_QUALITY){
+        if (item.sellIn < EXPIRED_SELL_IN && item.quality > MINIMUM_QUALITY) {
             decreaseItemQuality(item)
         }
     }
 
-    private fun isNotBackstagePasses(item: Item) = item.name != BACKSTAGE_PASSES
-    private fun isNotAgedBrie(item: Item) = item.name != AGED_BRIE
+    private fun updateAgedBrieItemQuality(item: Item) {
+        increaseItemQuality(item)
+        if (item.sellIn < EXPIRED_SELL_IN && item.quality < MAXIMUM_QUALITY) {
+            increaseItemQuality(item)
+        }
+    }
+
+    private fun updateBackstagePassesItemQuality(item: Item) {
+        increaseItemQuality(item)
+        if(item.quality < MAXIMUM_QUALITY && item.sellIn < BACKSTAGE_PASSES_FLAG_AT_10_SELL_IN){
+            increaseItemQuality(item)
+        }
+        if(item.quality < MAXIMUM_QUALITY && item.sellIn < BACKSTAGE_PASSES_FLAG_AT_5_SELL_IN){
+            increaseItemQuality(item)
+        }
+        if (item.sellIn < EXPIRED_SELL_IN){
+            resetItemQuality(item)
+        }
+    }
 
 }
