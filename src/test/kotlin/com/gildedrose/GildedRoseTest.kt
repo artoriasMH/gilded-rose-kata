@@ -115,4 +115,27 @@ internal class GildedRoseTest {
         assertEquals(expected, app.items.first().quality.value)
     }
 
+    @Test
+    fun `should decrease by 2 the quality of an item if it's a 'Conjured' when is updated`() {
+        val items = listOf(ConjuredItem(Name("Conjured Mana Cake"), SellIn(5), Quality(20)))
+        val app = GildedRose(items)
+
+        app.updateQuality()
+
+        val expected = 18
+        assertEquals(expected, app.items.first().quality.value)
+    }
+
+    @Test
+    fun `should decrease by 4 the quality of an item if it's a 'Conjured' and sellIn is less than 0 when is updated`() {
+        val items = listOf(ConjuredItem(Name("Conjured Mana Cake"), SellIn(0), Quality(5)))
+        val app = GildedRose(items)
+
+        app.updateQuality()
+
+        val expected = 1
+        assertEquals(expected, app.items.first().quality.value)
+    }
+
+
 }
