@@ -47,7 +47,7 @@ data class Quality(
         Quality(value - 1)
     }
 
-    fun increase() = if (value + 1 < MAX_VALUE) {
+    fun increase() = if (value + 1 > MAX_VALUE) {
         Quality(value)
     } else {
         Quality(value + 1)

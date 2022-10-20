@@ -13,7 +13,7 @@ internal class GildedRoseTest {
         app.updateQuality()
 
         val expected = 4
-        assertEquals(expected, app.items.first().sellIn)
+        assertEquals(expected, app.items.first().sellIn.value)
     }
 
     @Test
@@ -24,7 +24,7 @@ internal class GildedRoseTest {
         app.updateQuality()
 
         val expected = 2
-        assertEquals(expected, app.items.first().quality)
+        assertEquals(expected, app.items.first().quality.value)
     }
 
     @Test
@@ -35,7 +35,7 @@ internal class GildedRoseTest {
         app.updateQuality()
 
         val expected = 1
-        assertEquals(expected, app.items.first().quality)
+        assertEquals(expected, app.items.first().quality.value)
     }
 
     @Test
@@ -46,40 +46,40 @@ internal class GildedRoseTest {
         app.updateQuality()
 
         val expected = 0
-        assertEquals(expected, app.items.first().quality)
+        assertEquals(expected, app.items.first().quality.value)
     }
 
     @Test
     fun `should increase by 1 the quality of an item if it's an 'Aged Brie' when is updated`() {
-        val items = listOf(AgedBrieItem(Name("Aged Brie"), SellIn(0), Quality(1)))
+        val items = listOf(AgedBrieItem(Name("Aged Brie"), SellIn(8), Quality(5)))
         val app = GildedRose(items)
 
         app.updateQuality()
 
         val expected = 6
-        assertEquals(expected, app.items.first().quality)
+        assertEquals(expected, app.items.first().quality.value)
     }
 
     @Test
     fun `should never decrease the quality of an item if it's a 'Sulfuras, Hand of Ragnaros' when is updated`() {
-        val items = listOf(SulfurasItem(Name("Aged Brie"), SellIn(0), Quality(1)))
+        val items = listOf(SulfurasItem(Name("Sulfuras, Hand of Ragnaros"), SellIn(-100), Quality(80)))
         val app = GildedRose(items)
 
         app.updateQuality()
 
         val expected = 80
-        assertEquals(expected, app.items.first().quality)
+        assertEquals(expected, app.items.first().quality.value)
     }
 
     @Test
     fun `should increase by 1 the quality of an item if it's a 'Backstage passes' and sellIn is greather than 10 when is updated`() {
-        val items = listOf(BackstagePassesItem(Name("Backstage passes to a TAFKAL80ETC concert"), SellIn(0), Quality(1)))
+        val items = listOf(BackstagePassesItem(Name("Backstage passes to a TAFKAL80ETC concert"), SellIn(20), Quality(20)))
         val app = GildedRose(items)
 
         app.updateQuality()
 
         val expected = 21
-        assertEquals(expected, app.items.first().quality)
+        assertEquals(expected, app.items.first().quality.value)
     }
 
     @Test
@@ -90,7 +90,7 @@ internal class GildedRoseTest {
         app.updateQuality()
 
         val expected = 22
-        assertEquals(expected, app.items.first().quality)
+        assertEquals(expected, app.items.first().quality.value)
     }
 
     @Test
@@ -101,7 +101,7 @@ internal class GildedRoseTest {
         app.updateQuality()
 
         val expected = 23
-        assertEquals(expected, app.items.first().quality)
+        assertEquals(expected, app.items.first().quality.value)
     }
     
     @Test
@@ -112,7 +112,7 @@ internal class GildedRoseTest {
         app.updateQuality()
 
         val expected = 0
-        assertEquals(expected, app.items.first().quality)
+        assertEquals(expected, app.items.first().quality.value)
     }
 
 }
