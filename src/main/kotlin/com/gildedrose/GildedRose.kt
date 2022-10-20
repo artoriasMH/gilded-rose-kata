@@ -26,16 +26,12 @@ class GildedRose(var items: List<Item>) {
                 }
                 else -> {
                     decreaseSellIn(item)
-
+                    updateItemQuality(item)
                 }
             }
 
             if (isNotAgedBrie(item) && isNotBackstagePasses(item)) {
-                if (item.quality > MINIMUM_QUALITY) {
-                    if (isNotSulfuras(item)) {
-                        decreaseItemQuality(item)
-                    }
-                }
+
             }
 
             else {
@@ -66,12 +62,7 @@ class GildedRose(var items: List<Item>) {
                 if (isNotAgedBrie(item)) {
                     if (isNotBackstagePasses(item)) {
 
-                        //decrease by two the quality
-                        if (item.quality > MINIMUM_QUALITY) {
-                            if (isNotSulfuras(item)) {
-                                decreaseItemQuality(item)
-                            }
-                        }
+
 
                     }  else {
                         resetItemQuality(item)
@@ -102,12 +93,11 @@ class GildedRose(var items: List<Item>) {
 
     private fun updateItemQuality(item: Item){
         decreaseItemQuality(item)
-        if(item.sellIn < EXPIRED_SELL_IN){
+        if(item.sellIn < EXPIRED_SELL_IN && item.quality > MINIMUM_QUALITY){
             decreaseItemQuality(item)
         }
     }
 
-    private fun isNotSulfuras(item: Item) = item.name != SULFURAS
     private fun isNotBackstagePasses(item: Item) = item.name != BACKSTAGE_PASSES
     private fun isNotAgedBrie(item: Item) = item.name != AGED_BRIE
 
