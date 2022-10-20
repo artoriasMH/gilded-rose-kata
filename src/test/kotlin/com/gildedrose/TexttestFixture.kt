@@ -12,7 +12,6 @@ fun main(args: Array<String>) {
         BackstagePassesItem(Name("Backstage passes to a TAFKAL80ETC concert"), SellIn(15), Quality( 20)),
         BackstagePassesItem(Name("Backstage passes to a TAFKAL80ETC concert"), SellIn(10), Quality( 49)),
         BackstagePassesItem(Name("Backstage passes to a TAFKAL80ETC concert"), SellIn(5), Quality( 49)),
-        // this conjured item does not work properly yet
         ConjuredItem(Name("Conjured Mana Cake"), SellIn(3), Quality( 6)))
 
     val app = GildedRose(items)
