@@ -16,28 +16,42 @@ class GildedRose(var items: List<Item>) {
 
         for (item in items) {
 
+            when(item.name){
+                SULFURAS -> break
+                AGED_BRIE -> {
+                    decreaseSellIn(item)
+                }
+                BACKSTAGE_PASSES -> {
+                    decreaseSellIn(item)
+                }
+                else -> {
+                    decreaseSellIn(item)
+
+                }
+            }
+
             if (isNotAgedBrie(item) && isNotBackstagePasses(item)) {
                 if (item.quality > MINIMUM_QUALITY) {
                     if (isNotSulfuras(item)) {
-                        item.quality = decreaseItemQuality(item)
+                        decreaseItemQuality(item)
                     }
                 }
             }
 
             else {
                 if (item.quality < MAXIMUM_QUALITY) {
-                    item.quality = increaseItemQuality(item)
+                    increaseItemQuality(item)
 
                     if (item.name == BACKSTAGE_PASSES) {
-                        if (item.sellIn <= BACKSTAGE_PASSES_FLAG_AT_10_SELL_IN) {
+                        if (item.sellIn < BACKSTAGE_PASSES_FLAG_AT_10_SELL_IN) {
                             if (item.quality < MAXIMUM_QUALITY) {
-                                item.quality = increaseItemQuality(item)
+                                increaseItemQuality(item)
                             }
                         }
 
-                        if (item.sellIn <= BACKSTAGE_PASSES_FLAG_AT_5_SELL_IN) {
+                        if (item.sellIn < BACKSTAGE_PASSES_FLAG_AT_5_SELL_IN) {
                             if (item.quality < MAXIMUM_QUALITY) {
-                                item.quality = increaseItemQuality(item)
+                                increaseItemQuality(item)
                             }
                         }
                     }
@@ -45,28 +59,27 @@ class GildedRose(var items: List<Item>) {
             }
 
 
-            if (isNotSulfuras(item)) {
-                item.sellIn = decreaseSellIn(item)
-            }
+
 
 
             if (item.sellIn < EXPIRED_SELL_IN) {
                 if (isNotAgedBrie(item)) {
                     if (isNotBackstagePasses(item)) {
 
+                        //decrease by two the quality
                         if (item.quality > MINIMUM_QUALITY) {
                             if (isNotSulfuras(item)) {
-                                item.quality = decreaseItemQuality(item)
+                                decreaseItemQuality(item)
                             }
                         }
-                    }
-                    else {
-                        item.quality = resetItemQuality()
+
+                    }  else {
+                        resetItemQuality(item)
                     }
                 }
                 else {
                     if (item.quality < MAXIMUM_QUALITY) {
-                        item.quality = increaseItemQuality(item)
+                        increaseItemQuality(item)
                     }
                 }
             }
@@ -74,11 +87,25 @@ class GildedRose(var items: List<Item>) {
         }
     }
 
-    private fun decreaseSellIn(item: Item) = item.sellIn - 1
+    private fun decreaseSellIn(item: Item) {
+        item.sellIn--
+    }
+    private fun resetItemQuality(item: Item) {
+        item.quality = 0
+    }
+    private fun decreaseItemQuality(item: Item) {
+        item.quality--
+    }
+    private fun increaseItemQuality(item: Item) {
+        item.quality++
+    }
 
-    private fun resetItemQuality() = 0
-    private fun decreaseItemQuality(item: Item) = item.quality - 1
-    private fun increaseItemQuality(item: Item) = item.quality + 1
+    private fun updateItemQuality(item: Item){
+        decreaseItemQuality(item)
+        if(item.sellIn < EXPIRED_SELL_IN){
+            decreaseItemQuality(item)
+        }
+    }
 
     private fun isNotSulfuras(item: Item) = item.name != SULFURAS
     private fun isNotBackstagePasses(item: Item) = item.name != BACKSTAGE_PASSES
